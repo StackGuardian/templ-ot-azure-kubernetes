@@ -1,0 +1,9 @@
+name_prefix = "demo"
+location = "germanywestcentral"
+
+tags = {
+  Owner = "your-name"
+}
+
+# Required: who may reach the Kubernetes API, for example your office or VPN egress IP.
+allowed_api_cidrs = ["203.0.113.10/32"]
