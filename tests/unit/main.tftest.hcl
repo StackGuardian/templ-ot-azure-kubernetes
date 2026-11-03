@@ -199,3 +199,14 @@ run "nodes_are_private" {
     error_message = "A network policy engine must be enabled."
   }
 }
+
+# U-11
+run "broad_api_cidr_is_rejected" {
+  command = plan
+
+  variables {
+    allowed_api_cidrs = ["128.0.0.0/1"]
+  }
+
+  expect_failures = [var.allowed_api_cidrs]
+}

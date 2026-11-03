@@ -4,8 +4,8 @@ Tests use the built-in OpenTofu test framework (`tofu test`, OpenTofu 1.8 or lat
 
 | Level | Folder | What it does | Cost | When it runs |
 |---|---|---|---|---|
-| Unit | `tests/unit` | Plan only with mocked providers. Checks configuration and security settings. | None | Every push and pull request |
-| Integration | `tests/integration` | Deploys real resources, checks them, destroys them. | Cloud cost while running | Manually (GitHub Actions `integration` workflow) |
+| Unit | `tests/unit` | Plan only with mocked providers. Checks configuration and security settings. | None | Merge requests into `development` or `main`, and tags |
+| Integration | `tests/integration` | Deploys real resources, checks them, destroys them. | Cloud cost while running | Tags, when cloud credentials are set (`integration-tests` job) |
 
 ## Run locally
 
@@ -29,6 +29,7 @@ tofu test -test-directory=tests/integration   # needs cloud credentials
 | U-08 | Unit | Azure Policy add-on, Container Insights and `kube-audit-admin` logs are enabled | done |
 | U-09 | Unit | Deploying identity gets the AKS RBAC Cluster Admin role on the cluster | done |
 | U-10 | Unit | Nodes have no public IPs, are in the node subnet with an NSG, Cilium network policy is on | done |
+| U-11 | Unit | `allowed_api_cidrs` broader than `/8` (for example `128.0.0.0/1`) is rejected | done |
 | I-01 | Integration | Cluster is created, FQDN and Kubernetes version are set | done |
 | I-02 | Integration | System node pool has the desired node count | done |
 | I-03 | Integration | OIDC issuer URL output is set | done |

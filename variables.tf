@@ -48,8 +48,8 @@ variable "allowed_api_cidrs" {
   }
 
   validation {
-    condition     = !anytrue([for c in var.allowed_api_cidrs : endswith(c, "/0")])
-    error_message = "Open-to-the-internet CIDRs like 0.0.0.0/0 are not allowed."
+    condition     = alltrue([for c in var.allowed_api_cidrs : try(tonumber(split("/", c)[1]) >= 8, false)])
+    error_message = "CIDRs broader than /8, such as 0.0.0.0/0, are not allowed."
   }
 }
 
@@ -63,6 +63,11 @@ variable "node_count" {
   description = "Number of nodes in the system node pool"
   type        = number
   default     = 2
+
+  validation {
+    condition     = var.node_count >= 1
+    error_message = "A system node pool needs at least one node."
+  }
 }
 
 variable "host_encryption_enabled" {
@@ -75,4 +80,9 @@ variable "log_retention_days" {
   description = "Retention of the logs in Log Analytics"
   type        = number
   default     = 90
+
+  validation {
+    condition     = var.log_retention_days >= 30 && var.log_retention_days <= 730
+    error_message = "Log Analytics retention must be between 30 and 730 days."
+  }
 }
