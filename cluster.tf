@@ -3,7 +3,7 @@ resource "azurerm_log_analytics_workspace" "this" {
   location            = azurerm_resource_group.this.location
   resource_group_name = azurerm_resource_group.this.name
   sku                 = "PerGB2018"
-  retention_in_days   = var.log_retention_days
+  retention_in_days   = var.advanced_settings.log_retention_days
   tags                = local.tags
 }
 
@@ -19,7 +19,7 @@ resource "azurerm_kubernetes_cluster" "this" {
   location                  = azurerm_resource_group.this.location
   resource_group_name       = azurerm_resource_group.this.name
   dns_prefix                = "${var.name_prefix}-aks"
-  kubernetes_version        = var.kubernetes_version
+  kubernetes_version        = var.advanced_settings.kubernetes_version
   sku_tier                  = "Free"
   automatic_upgrade_channel = "patch"
   node_os_upgrade_channel   = "NodeImage"
@@ -42,11 +42,11 @@ resource "azurerm_kubernetes_cluster" "this" {
 
   default_node_pool {
     name                        = "system"
-    vm_size                     = var.node_vm_size
-    node_count                  = var.node_count
+    vm_size                     = var.advanced_settings.node_vm_size
+    node_count                  = var.advanced_settings.node_count
     vnet_subnet_id              = azurerm_subnet.nodes.id
     max_pods                    = 50
-    host_encryption_enabled     = var.host_encryption_enabled
+    host_encryption_enabled     = var.advanced_settings.host_encryption_enabled
     node_public_ip_enabled      = false
     temporary_name_for_rotation = "systemtmp"
 

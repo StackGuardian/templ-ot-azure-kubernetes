@@ -47,7 +47,7 @@ Accepted checkov findings (documented inline in the code):
 | CKV_AZURE_117 | Platform-managed disk keys, a disk encryption set is out of scope |
 | CKV_AZURE_170 | Free tier, the paid SLA tier is not needed for a demo |
 | CKV_AZURE_226 | Ephemeral OS disks need VM sizes with a local cache disk |
-| CKV_AZURE_227 | Host encryption is configurable (`host_encryption_enabled`) |
+| CKV_AZURE_227 | Host encryption is configurable (`advanced_settings.host_encryption_enabled`) |
 | CKV_AZURE_232 | Single system node pool, workloads run on it too |
 
 ## Usage
@@ -80,14 +80,20 @@ To give other people access, assign them an AKS RBAC role on the cluster.
 |---|---|---|
 | `name_prefix` | Prefix for all resource names | `"demo"` |
 | `location` | Azure location | `"germanywestcentral"` |
-| `tags` | Additional tags for all resources | `{}` |
 | `allowed_api_cidrs` | CIDRs allowed to reach the API server (required, `/0` rejected) | none |
+| `advanced_settings` | Object with the settings below, all optional | `{}` |
+
+`advanced_settings` attributes (shown as "Advanced Settings" in the StackGuardian form):
+
+| Name | Description | Default |
+|---|---|---|
 | `vnet_cidr` | Address space of the VNet (pods use `192.168.0.0/16`, services `172.16.0.0/16`) | `"10.0.0.0/16"` |
-| `kubernetes_version` | Kubernetes version, `null` uses the AKS default | `null` |
+| `kubernetes_version` | Kubernetes minor version, AKS picks the latest patch | `"1.37"` |
 | `node_vm_size` | VM size of the system node pool | `"Standard_D2s_v5"` |
 | `node_count` | Number of nodes | `2` |
 | `host_encryption_enabled` | Encryption at host (needs the subscription feature) | `false` |
 | `log_retention_days` | Log retention in Log Analytics | `90` |
+| `tags` | Additional tags for all resources | `{}` |
 
 ## Outputs
 

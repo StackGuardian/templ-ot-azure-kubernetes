@@ -15,29 +15,6 @@ variable "location" {
   default     = "germanywestcentral"
 }
 
-variable "tags" {
-  description = "Additional tags for all resources"
-  type        = map(string)
-  default     = {}
-}
-
-variable "vnet_cidr" {
-  description = "Address space of the VNet. Must not overlap with the pod and service CIDRs."
-  type        = string
-  default     = "10.0.0.0/16"
-
-  validation {
-    condition     = can(cidrnetmask(var.vnet_cidr))
-    error_message = "Must be a valid IPv4 CIDR block."
-  }
-}
-
-variable "kubernetes_version" {
-  description = "Kubernetes version of the cluster. Null uses the current AKS default."
-  type        = string
-  default     = null
-}
-
 variable "allowed_api_cidrs" {
   description = "IPv4 CIDRs allowed to reach the Kubernetes API server"
   type        = list(string)
@@ -53,36 +30,33 @@ variable "allowed_api_cidrs" {
   }
 }
 
-variable "node_vm_size" {
-  description = "VM size of the system node pool"
-  type        = string
-  default     = "Standard_D2s_v5"
-}
-
-variable "node_count" {
-  description = "Number of nodes in the system node pool"
-  type        = number
-  default     = 2
+# Grouped so the StackGuardian form can show them in one "Advanced Settings" section.
+variable "advanced_settings" {
+  description = "Settings most deployments keep at their defaults"
+  type = object({
+    vnet_cidr               = optional(string, "10.0.0.0/16")     # Address space of the VNet. Must not overlap with the pod and service CIDRs.
+    kubernetes_version      = optional(string, "1.37")            # Kubernetes minor version; AKS picks the latest patch
+    node_vm_size            = optional(string, "Standard_D2s_v5") # VM size of the system node pool
+    node_count              = optional(number, 2)                 # Number of nodes in the system node pool
+    host_encryption_enabled = optional(bool, false)               # Needs the EncryptionAtHost feature registered in the subscription
+    log_retention_days      = optional(number, 90)                # Retention of the logs in Log Analytics
+    tags                    = optional(map(string), {})           # Additional tags for all resources
+  })
+  default  = {}
+  nullable = false
 
   validation {
-    condition     = var.node_count >= 1
+    condition     = can(cidrnetmask(var.advanced_settings.vnet_cidr))
+    error_message = "vnet_cidr must be a valid IPv4 CIDR block."
+  }
+
+  validation {
+    condition     = var.advanced_settings.node_count >= 1
     error_message = "A system node pool needs at least one node."
   }
-}
-
-variable "host_encryption_enabled" {
-  description = "Encrypt temp disks and caches on the host. Needs the EncryptionAtHost feature registered in the subscription."
-  type        = bool
-  default     = false
-}
-
-variable "log_retention_days" {
-  description = "Retention of the logs in Log Analytics"
-  type        = number
-  default     = 90
 
   validation {
-    condition     = var.log_retention_days >= 30 && var.log_retention_days <= 730
+    condition     = var.advanced_settings.log_retention_days >= 30 && var.advanced_settings.log_retention_days <= 730
     error_message = "Log Analytics retention must be between 30 and 730 days."
   }
 }
