@@ -4,17 +4,19 @@
     "allowed_api_cidrs"
   ],
   "properties": {
+    "allowed_api_cidrs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
     "name_prefix": {
-      "title": "Name prefix",
       "type": "string",
-      "description": "Prefix for all resource names",
       "default": "demo",
       "pattern": "^[a-z][a-z0-9-]{1,15}$"
     },
     "location": {
-      "title": "Location",
       "type": "string",
-      "description": "Azure location",
       "default": "germanywestcentral",
       "enum": [
         "australiacentral",
@@ -139,20 +141,11 @@
         "West US 3 (westus3)"
       ]
     },
-    "allowed_api_cidrs": {
-      "title": "Allowed api cidrs",
-      "type": "array",
-      "items": {
-        "type": "string"
-      },
-      "description": "IPv4 CIDRs allowed to reach the Kubernetes API server"
-    },
     "advanced_settings": {
       "type": "object",
       "properties": {
         "show_advanced_settings": {
           "type": "boolean",
-          "title": "Show advanced settings",
           "default": false
         }
       },
@@ -166,7 +159,8 @@
                     false
                   ]
                 }
-              }
+              },
+              "required": []
             },
             {
               "properties": {
@@ -284,12 +278,15 @@
                   "description": "Additional tags for all resources",
                   "default": {}
                 }
-              }
+              },
+              "required": []
             }
           ]
         }
-      }
+      },
+      "required": []
     }
   },
-  "title": "Azure Kubernetes Cluster (AKS)"
+  "title": "Azure Kubernetes Cluster (AKS)",
+  "dependencies": {}
 }
