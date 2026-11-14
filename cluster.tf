@@ -15,6 +15,8 @@ resource "azurerm_log_analytics_workspace" "this" {
   tags                = local.tags
 }
 
+#trivy:ignore:AVD-AZU-0065 Public API server limited to allowed_api_cidrs, a private cluster would need a jump host
+#trivy:ignore:AVD-AZU-0067 Disks use platform-managed keys, a disk encryption set is out of scope for the demo
 resource "azurerm_kubernetes_cluster" "this" {
   #checkov:skip=CKV_AZURE_6:Authorized IP ranges come from allowed_api_cidrs, a validation requires at least one
   #checkov:skip=CKV_AZURE_232:Single system node pool for the demo, workloads run on it too
