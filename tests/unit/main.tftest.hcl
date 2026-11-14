@@ -212,3 +212,13 @@ run "broad_api_cidr_is_rejected" {
 
   expect_failures = [var.allowed_api_cidrs]
 }
+
+# U-12
+run "workspace_name_has_a_random_suffix" {
+  command = apply
+
+  assert {
+    condition     = can(regex("^${var.name_prefix}-aks-logs-[a-z0-9]{6}$", azurerm_log_analytics_workspace.this.name))
+    error_message = "The Log Analytics workspace name must end with a random 6 character suffix."
+  }
+}
