@@ -1,5 +1,13 @@
+# Azure keeps a deleted Log Analytics workspace for 14 days and reserves its name.
+# The random suffix avoids a name collision when the module is deployed again.
+resource "random_string" "workspace_suffix" {
+  length  = 6
+  special = false
+  upper   = false
+}
+
 resource "azurerm_log_analytics_workspace" "this" {
-  name                = "${var.name_prefix}-aks-logs"
+  name                = "${var.name_prefix}-aks-logs-${random_string.workspace_suffix.result}"
   location            = azurerm_resource_group.this.location
   resource_group_name = azurerm_resource_group.this.name
   sku                 = "PerGB2018"
