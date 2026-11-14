@@ -9,7 +9,7 @@ Use it to show a hardened Kubernetes setup on Azure or to get a cluster for test
 - A resource group
 - A virtual network with a node subnet and a network security group
 - The AKS cluster (Free tier) with one system node pool, Azure CNI Overlay with Cilium
-- A Log Analytics workspace for Container Insights and audit logs
+- A Log Analytics workspace for Container Insights and audit logs (the name ends with a random suffix, because Azure reserves the name of a deleted workspace for 14 days)
 - Cluster admin rights for the identity that runs the deployment
 
 ## Before you start
