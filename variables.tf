@@ -51,8 +51,8 @@ variable "advanced_settings" {
   }
 
   validation {
-    condition     = var.advanced_settings.node_count >= 1
-    error_message = "A system node pool needs at least one node."
+    condition     = var.advanced_settings.node_count >= 2 && var.advanced_settings.node_count <= 19
+    error_message = "node_count must be between 2 and 19."
   }
 
   validation {

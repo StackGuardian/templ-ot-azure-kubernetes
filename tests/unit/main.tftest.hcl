@@ -222,3 +222,16 @@ run "workspace_name_has_a_random_suffix" {
     error_message = "The Log Analytics workspace name must end with a random 6 character suffix."
   }
 }
+
+# U-13
+run "node_count_outside_2_to_19_is_rejected" {
+  command = plan
+
+  variables {
+    advanced_settings = {
+      node_count = 1
+    }
+  }
+
+  expect_failures = [var.advanced_settings]
+}
