@@ -34,6 +34,7 @@ tofu test -test-directory=tests/integration   # needs cloud credentials
 | U-11 | Unit | `allowed_api_cidrs` broader than `/8` (for example `128.0.0.0/1`) is rejected | done |
 | U-12 | Unit | The Log Analytics workspace name ends with a random 6 character suffix, so a redeployment does not collide with a soft-deleted workspace | done |
 | U-13 | Unit | `advanced_settings.node_count` below 2 is rejected | done |
+| U-14 | Unit | A `advanced_settings.vnet_cidr` that overlaps the pod CIDR (`192.168.0.0/16`) or the service CIDR (`172.16.0.0/16`) is rejected, a neighboring range is accepted | done |
 | I-01 | Integration | Cluster is created, FQDN and Kubernetes version are set | done |
 | I-02 | Integration | System node pool has the desired node count | done |
 | I-03 | Integration | OIDC issuer URL output is set | done |

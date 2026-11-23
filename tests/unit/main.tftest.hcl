@@ -235,3 +235,44 @@ run "node_count_outside_2_to_19_is_rejected" {
 
   expect_failures = [var.advanced_settings]
 }
+
+# U-14
+run "vnet_cidr_overlapping_the_pod_cidr_is_rejected" {
+  command = plan
+
+  variables {
+    advanced_settings = {
+      vnet_cidr = "192.168.10.0/24"
+    }
+  }
+
+  expect_failures = [var.advanced_settings]
+}
+
+run "vnet_cidr_containing_the_service_cidr_is_rejected" {
+  command = plan
+
+  variables {
+    advanced_settings = {
+      vnet_cidr = "172.0.0.0/8"
+    }
+  }
+
+  expect_failures = [var.advanced_settings]
+}
+
+run "vnet_cidr_next_to_the_service_cidr_is_accepted" {
+  command = plan
+
+  variables {
+    advanced_settings = {
+      vnet_cidr = "172.17.0.0/16"
+    }
+  }
+
+  assert {
+    condition     = contains(azurerm_virtual_network.this.address_space, "172.17.0.0/16")
+    error_message = "A VNet that does not overlap the pod and service CIDRs must be accepted."
+  }
+}
+
