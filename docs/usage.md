@@ -17,7 +17,7 @@ Use it to show a hardened Kubernetes setup on Azure or to get a cluster for test
 - A workflow with an Azure cloud connector for the target subscription
 - The connector's identity needs rights to create resources **and** to assign roles (for example Owner, or Contributor plus User Access Administrator)
 - The public IP range you work from, for **Allowed api cidrs**
-- To use the cluster: the Azure CLI, `kubectl` and `kubelogin`
+- To use the cluster from your own machine: the Azure CLI, `kubectl`, `kubelogin` and an AKS RBAC role on the cluster for your Entra ID user (see "After the run")
 - Optional: the EncryptionAtHost feature registered in the subscription, if you want host encryption
 
 ## Form fields
@@ -40,17 +40,17 @@ Use it to show a hardened Kubernetes setup on Azure or to get a cluster for test
 | Log retention days | How long logs are kept | `90` |
 | Tags | Extra tags added to all resources | none |
 
-The version list contains the AKS versions in standard support. A new version may not be available in every region yet. If the run fails for that reason, pick the next lower version.
+The version list contains the AKS versions in standard support. A new version may not be available in every region yet. If the run fails for that reason on a new cluster, pick the next lower version. On an existing cluster, AKS upgrades one minor version at a time (for example 1.35, then 1.36), so 1.35 to 1.37 in one step is not allowed, and it cannot go back to an older version. Change the version in single steps and never to a lower one.
 
 ## After the run
 
 The workflow outputs show:
 
 - `cluster_name`, `resource_group_name` and `kubernetes_version`
-- `kubeconfig_command`: run it from an allowed IP, then `kubectl get nodes`
+- `kubeconfig_command`: adds the cluster to your kubeconfig. Local accounts are off, so `kubectl` works only for an Entra ID user with an AKS RBAC role on the cluster, from an allowed IP
 - `oidc_issuer_url`: for workload identity
 
-To give other people access, assign them an AKS RBAC role on the cluster. Creating the cluster takes about 10 minutes.
+The only cluster admin at the start is the identity that ran the deployment, which is the identity of the StackGuardian cloud connector. Workflows that use the same connector can manage the cluster. Subscription Owner or Contributor does not give access to the cluster itself: to use `kubectl` yourself or to give other people access, assign an AKS RBAC role on the cluster (for example "Azure Kubernetes Service RBAC Cluster Admin"). Creating the cluster takes about 10 minutes.
 
 ## Security defaults
 

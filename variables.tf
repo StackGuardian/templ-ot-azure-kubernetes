@@ -50,6 +50,18 @@ variable "advanced_settings" {
     error_message = "vnet_cidr must be a valid IPv4 CIDR block."
   }
 
+  # The pod CIDR (192.168.0.0/16) and the service CIDR (172.16.0.0/16) are fixed. An overlapping VNet
+  # only fails when the cluster is created, after the network exists. The ranges are IPv4 numbers.
+  validation {
+    condition = try(alltrue([
+      for r in [{ s = 3232235520, e = 3232301055 }, { s = 2886729728, e = 2886795263 }] : (
+        sum([for i, o in split(".", cidrhost(var.advanced_settings.vnet_cidr, 0)) : tonumber(o) * pow(256, 3 - i)]) > r.e ||
+        sum([for i, o in split(".", cidrhost(var.advanced_settings.vnet_cidr, -1)) : tonumber(o) * pow(256, 3 - i)]) < r.s
+      )
+    ]), false)
+    error_message = "vnet_cidr must not overlap 192.168.0.0/16 (pod CIDR) or 172.16.0.0/16 (service CIDR)."
+  }
+
   validation {
     condition     = var.advanced_settings.node_count >= 2 && var.advanced_settings.node_count <= 19
     error_message = "node_count must be between 2 and 19."
