@@ -161,14 +161,12 @@
                   "enum": [
                     "1.37",
                     "1.36",
-                    "1.35",
-                    "1.34"
+                    "1.35"
                   ],
                   "enumNames": [
                     "Kubernetes 1.37",
                     "Kubernetes 1.36",
-                    "Kubernetes 1.35",
-                    "Kubernetes 1.34"
+                    "Kubernetes 1.35"
                   ]
                 },
                 "node_vm_size": {
@@ -244,8 +242,10 @@
                 "log_retention_days": {
                   "title": "Log retention days",
                   "type": "number",
-                  "description": "Retention of the logs in Log Analytics",
-                  "default": 90
+                  "description": "Retention of the logs in Log Analytics, 30 to 730 days",
+                  "default": 90,
+                  "minimum": 30,
+                  "maximum": 730
                 },
                 "tags": {
                   "title": "Tags",
